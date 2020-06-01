@@ -78,7 +78,6 @@ class Ricerca
 	}
     
     // READ Insegnanti
-	/*
 	function read()
 	{
     
@@ -118,7 +117,6 @@ class Ricerca
         
 		return $stmt;
 	}
-	*/
     
 }
 ?>
