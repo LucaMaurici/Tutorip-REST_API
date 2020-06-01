@@ -18,6 +18,7 @@ $data = json_decode(file_get_contents("php://input"));
 $o->nomeMateria = $data->nomeMateria;
 $o->valutazioneMedia = $data->valutazioneMedia;
 $o->tariffaMassima = $data->tariffaMassima;
+$o->posizione = $data->posizione;
 $stmt = $o->read();
 $num = $stmt->rowCount();
 

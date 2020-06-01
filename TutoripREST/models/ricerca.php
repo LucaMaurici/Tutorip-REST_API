@@ -6,6 +6,7 @@ class Ricerca
     public $nomeMateria;
     public $valutazioneMedia;
     public $tariffaMassima;
+	public $posizione;
     
 	// costruttore
 	public function __construct($db)
@@ -17,9 +18,9 @@ class Ricerca
 	function read()
 	{
     
-    	$query = "	SELECT i.email, i.descrizione, i.tariffa, i.valutazioneMedia, ( 1*(i.valutazioneMedia/5) + (280/(POW(i.tariffa, 1.5)+280)) ) as rilevanza
+    	$query = "	SELECT i.email, i.descrizione, i.tariffa, i.valutazioneMedia, SQRT(POW(:latitudine-p.latitudine,2)+POW(:longitudine-p.longitudine,2)) as distanza,( 1*(i.valutazioneMedia/5) + (280/(POW(i.tariffa, 1.5)+280)) + distanza ) as rilevanza
                   	FROM
-      (Insegnanti i JOIN Insegnanti_Materie im ON i.email = im.email) JOIN Materie m ON im.id_materia = m.id
+      ((Insegnanti i JOIN Insegnanti_Materie im ON i.email = im.email) JOIN Materie m ON im.id_materia = m.id) JOIN Posizioni p ON i.Posizioni_id = p.id
       				WHERE m.nome = :nomeMateria";
                    
 		if($this->valutazioneMedia!=null)
@@ -47,7 +48,14 @@ class Ricerca
         	$this->tariffaMassima = htmlspecialchars(strip_tags($this->tariffaMassima));
             $stmt->bindParam(":tariffaMassima", $this->tariffaMassima);
         }
-        
+		
+		if($this->posizione!=null) {
+        	$this->posizione->latitudine = htmlspecialchars(strip_tags($this->posizione->latitudine));
+            $stmt->bindParam(":latitudine", $this->posizione->latitudine);
+			$this->posizione->longitudine = htmlspecialchars(strip_tags($this->posizione->longitudine));
+            $stmt->bindParam(":longitudine", $this->posizione->longitudine);
+        }
+		
 		// execute query
 		$stmt->execute();
         
