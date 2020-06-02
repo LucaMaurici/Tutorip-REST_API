@@ -16,8 +16,10 @@ $o = new ricerca($db);
 
 $data = json_decode(file_get_contents("php://input"));
 $o->nomeMateria = $data->nomeMateria;
+echo $o->nomeMateria;
 $o->valutazioneMedia = $data->valutazioneMedia;
 $o->tariffaMassima = $data->tariffaMassima;
+$o->distanzaMassima = $data->distanzaMassima;
 $o->posizione = $data->posizione;
 $stmt = $o->read();
 $num = $stmt->rowCount();
