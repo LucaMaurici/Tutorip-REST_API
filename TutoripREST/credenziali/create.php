@@ -11,7 +11,7 @@ include_once '../models/credenziali.php';
 
 $database = new Database();
 $db = $database->getConnection();
-$utente = new utente($db);
+$credenziali = new credenziali($db);
 $data = json_decode(file_get_contents("php://input"));
  
 if(
@@ -19,10 +19,10 @@ if(
     //!empty($data->password)
     true
 ){
-	$utente->email = $data->email;
-    $utente->password = $data->password;
+	$credenziali->Email = $data->Email;
+    $credenziali->Token = $data->Token;
  
-	if($utente->create()){
+	if($credenziali->create()){
         http_response_code(201);
         echo json_encode(array("message" => "Credenziali creato correttamente."));
 	}

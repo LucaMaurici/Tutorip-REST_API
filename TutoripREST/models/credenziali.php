@@ -5,8 +5,8 @@ class Credenziali {
 	private $table_name = "Credenziali";
     
 	// proprietà
-    public $email;
-	public $password;
+    public $Email;
+	public $Token;
     public $emailNuova;
     public $passwordNuova;
     
@@ -62,16 +62,20 @@ class Credenziali {
         $query = "INSERT INTO
                     " . $this->table_name . "
                 SET
-                    email=:email, password=:password";
+                    email=:email, tokenType=:tokenType, accessToken=:accessToken";
                     
         $stmt = $this->conn->prepare($query);
         
-		$this->email = htmlspecialchars(strip_tags($this->email));
-        $this->password = htmlspecialchars(strip_tags($this->password));
-        
+		$this->Email = htmlspecialchars(strip_tags($this->Email));
+        $TokenType = htmlspecialchars(strip_tags($this->Token->TokenType));
+		$AccessToken = htmlspecialchars(strip_tags($this->Token->AccessToken));
+        echo $this->Email;
+        echo $TokenType;
+		echo $AccessToken;
         // binding
-		$stmt->bindParam(":email", $this->email);
-        $stmt->bindParam(":password", $this->password);
+		$stmt->bindParam(":email", $this->Email);
+        $stmt->bindParam(":tokenType", $TokenType);
+		$stmt->bindParam(":accessToken", $AccessToken);
         
         // execute query
         if($stmt->execute()){
