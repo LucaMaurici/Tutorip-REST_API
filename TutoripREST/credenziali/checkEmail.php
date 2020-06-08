@@ -14,21 +14,18 @@ $db = $database->getConnection();
 
 $credenziali = new credenziali($db);
 $data = json_decode(file_get_contents("php://input"));
-$credenziali->email = $data->email;
+$credenziali->Email = $data->Email;
 $stmt = $credenziali->checkEmail();
 $num = $stmt->rowCount();
 
 if($num>0){
 	//$utenti_arr = array();
 	//$utenti_arr['Elenco'] = array();
-
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
         extract($row);
-
         $numero_item = array(
             "n" => $n,
         );
-
         //array_push($utenti_arr['Elenco'], $utente_item);
     }
 

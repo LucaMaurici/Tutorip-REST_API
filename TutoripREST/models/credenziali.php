@@ -20,10 +20,10 @@ class Credenziali {
     	$query = "SELECT COUNT(*) as n FROM " . $this->table_name . " WHERE email=:email";
         $stmt = $this->conn->prepare($query);
         
-        $this->email = htmlspecialchars(strip_tags($this->email));
+        $this->Email = htmlspecialchars(strip_tags($this->Email));
         
         // binding
-        $stmt->bindParam(":email", $this->email);
+        $stmt->bindParam(":email", $this->Email);
 		
 		// execute query
 		$stmt->execute();
