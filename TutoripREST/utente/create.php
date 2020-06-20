@@ -21,20 +21,20 @@ if(
     //!empty($data->tipo)
     true
 ){
-    //$utente->id = $data->id;
+	$utente->id = $data->id;
     $utente->nome = $data->nome;
-    $utente->cognome = $data->cognome;
-    $utente->tipo = $data->tipo;
+	$utente->cognome = $data->cognome;
+    $utente->età = $data->età;
  
-   if($utente->create()){
+	if($utente->create()){
         http_response_code(201);
-        echo json_encode(array("message" => "utente creato correttamente."));
-    }
-    else{
+        echo json_encode(array("message" => "Utente creato correttamente."));
+	}
+	else{
         //503 servizio non disponibile
         http_response_code(503);
         echo json_encode(array("message" => "Impossibile creare utente."));
-    }
+	}
 }
 else{
     //400 bad request

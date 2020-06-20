@@ -25,7 +25,7 @@ if($num>0){
         extract($row);
 
         $item = array(
-            "id" => $id
+            "n" => $id
         );
     }
 

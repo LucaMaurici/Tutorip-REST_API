@@ -8,7 +8,7 @@ class Utente
     public $id;
 	public $nome;
 	public $cognome;
-	public $tipo;
+	public $età;
     
 	// costruttore
 	public function __construct($db)
@@ -29,34 +29,44 @@ class Utente
 		$stmt->execute();
 		return $stmt;
 	}
-        
-	// CREARE UTENTE
+	
+	// CREATE
     function create(){
-    /*
-        $query = "INSERT INTO
-                    " . $this->table_name . "
+        $query ="					
+				INSERT INTO Utenti
                 SET
-                    nome='".$this->nome."',cognome='".$this->cognome."', tipo='".$this->tipo."'";
-            */
-        $query = "INSERT INTO
-                    " . $this->table_name . "
-                SET
-                    nome=:nome, cognome=:cognome, tipo=:tipo";
+                    id=:id,
+					nome=:nome,
+					cognome=:cognome,
+					età=:eta
+				";
                     
         $stmt = $this->conn->prepare($query);
         
-        $this->nome = htmlspecialchars(strip_tags($this->nome));
-    	$this->cognome = htmlspecialchars(strip_tags($this->cognome));
-    	$this->tipo = htmlspecialchars(strip_tags($this->tipo));
+        $this->id = htmlspecialchars(strip_tags($this->id));
+		$this->nome = htmlspecialchars(strip_tags($this->nome));
+		$this->cognome = htmlspecialchars(strip_tags($this->cognome));
+		$this->età = htmlspecialchars(strip_tags($this->età));		
+		
+		if($this->id=="") $this->id = null;
+		if($this->nome=="") $this->nome = null;
+		if($this->cognome=="") $this->cognome = null;
+		if($this->età=="") $this->età = null;
         
         // binding
+        $stmt->bindParam(":id", $this->id);
         $stmt->bindParam(":nome", $this->nome);
-        $stmt->bindParam(":cognome", $this->cognome);
-        $stmt->bindParam(":tipo", $this->tipo);
-        
+		$stmt->bindParam(":cognome", $this->cognome);
+		$stmt->bindParam(":eta", $this->età);
+		
+		echo $this->id . "\n";
+		echo $this->nome . "\n";
+		echo $this->cognome . "\n";
+		echo $this->età . "\n";
+		
         // execute query
         if($stmt->execute()){
-            return true;
+			return true;
         }
         return false;
     }

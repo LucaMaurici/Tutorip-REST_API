@@ -1,12 +1,13 @@
 <?php
-class Utente
+class Insegnante
 {
 	private $conn;
-	private $table_name = "Utenti";
+	//private $table_name = "Insegnanti";
     
-	// proprietà di un utente
-    public $email;
-	public $nome;
+	// proprietà
+    public $id;
+	public $nome
+	public $cognome;
 	public $eta;
     
 	// costruttore
@@ -14,90 +15,43 @@ class Utente
 	{
 		$this->conn = $db;
 	}
-        
-	// READ Utenti
-	function read()
-	{
-		// select all
-		$query = "SELECT
-                        *
-                    FROM
-                   " . $this->table_name . "";
-		$stmt = $this->conn->prepare($query);
-		// execute query
-		$stmt->execute();
-		return $stmt;
-	}
-        
-	// CREARE UTENTE
-    function create() {
-        $query = "INSERT INTO
-                    " . $this->table_name . "
+	
+	// CREATE
+    function create(){
+        $query ="					
+				INSERT INTO Insegnanti
                 SET
-                    email=:email, nome=:nome, eta=:eta";
+                    id=:id,
+					nome=:nome,
+					cognome=:cognome,
+					eta=:eta
+				";
                     
         $stmt = $this->conn->prepare($query);
         
-		$this->email = htmlspecialchars(strip_tags($this->email));
-        $this->nome = htmlspecialchars(strip_tags($this->nome));
-    	$this->eta = htmlspecialchars(strip_tags($this->eta));
+        $this->id = htmlspecialchars(strip_tags($this->id));
+		$this->nome = htmlspecialchars(strip_tags($this->nome));
+		$this->cognome = htmlspecialchars(strip_tags($this->cognome));
+		$this->eta = htmlspecialchars(strip_tags($this->eta));		
+		
+		if($this->id=="") $this->id = null;
+		if($this->nome=="") $this->nome = null;
+		if($this->cognome=="") $this->cognome = null;
+		if($this->eta=="") $this->eta = null;
         
         // binding
-		$stmt->bindParam(":email", $this->email);
+        $stmt->bindParam(":id", $this->id);
         $stmt->bindParam(":nome", $this->nome);
-        $stmt->bindParam(":eta", $this->eta);
-        
+		$stmt->bindParam(":cognome", $this->cognome);
+		$stmt->bindParam(":eta", $this->eta);
+		
+		#echo $this->nome->nome . "\n";
+		
         // execute query
         if($stmt->execute()){
-            return true;
+			return true;
         }
         return false;
     }
-    
-	// AGGIORNARE UTENTE
-    function update() {
-        $query = "UPDATE
-                    " . $this->table_name . "
-                SET
-                    nome=:nome, eta=:eta
-                WHERE
-                    email = :email";
-
-        $stmt = $this->conn->prepare($query);
-
-		$this->email = htmlspecialchars(strip_tags($this->email));
-        $this->nome = htmlspecialchars(strip_tags($this->nome));
-    	$this->eta = htmlspecialchars(strip_tags($this->eta));
-
-        // binding
-        $stmt->bindParam(":email", $this->email);
-        $stmt->bindParam(":nome", $this->nome);
-        $stmt->bindParam(":eta", $this->eta);
-
-        // execute the query
-        if($stmt->execute()){
-        	return true;
-        }
-
-        return false;
-    }
-    
-	/*
-	// CANCELLARE UTENTE
-    function delete(){
-        $query = "DELETE FROM " . $this->table_name . " WHERE email = ?";
-
-        $stmt = $this->conn->prepare($query);
-
-        $this->email = htmlspecialchars(strip_tags($this->email));
-
-        $stmt->bindParam(1, $this->email);
-
-        // execute query
-        if($stmt->execute()){
-            return true;
-        }
-        return false;
-    }*/
 }
 ?>
