@@ -15,6 +15,20 @@ class Credenziali {
 	{
 		$this->conn = $db;
 	}
+	
+	function getId() {
+		$query = "SELECT id FROM " . $this->table_name . " WHERE email=:email";
+        $stmt = $this->conn->prepare($query);
+        
+        $this->Email = htmlspecialchars(strip_tags($this->Email));
+        
+        // binding
+        $stmt->bindParam(":email", $this->Email);
+		
+		// execute query
+		$stmt->execute();
+		return $stmt;
+	}
     
     function checkEmail() {
     	$query = "SELECT COUNT(*) as n FROM " . $this->table_name . " WHERE email=:email";
