@@ -17,14 +17,16 @@ $data = json_decode(file_get_contents("php://input"));
 if(true)
 {
     $insegnante->id = $data->id;
-	$insegnante->gruppo = $data->gruppo;
-	$insegnante->descrizione = $data->descrizione;
-    $insegnante->tariffa = $data->tariffa;
-	$insegnante->posizione = $data->posizione;
-	$insegnante->promozioni = $data->promozioni;
-    $insegnante->valutazione = $data->valutazione;
+	$insegnante->nomeDaVisualizzare = $data->nomeDaVisualizzare;
+	#immagine
+	$insegnante->tariffa = $data->tariffa;
+	//$insegnante->valutazioneMedia = $data->valutazioneMedia;
 	$insegnante->numeroValutazioni = $data->numeroValutazioni;
+	$insegnante->promozioni = $data->promozioni;
+    $insegnante->gruppo = $data->gruppo;
 	$insegnante->dataOraRegistrazione = $data->dataOraRegistrazione;
+	$insegnante->profiloPubblico = $data->profiloPubblico;
+	$insegnante->posizione = $data->posizione;
  
    if($insegnante->create()){
         http_response_code(201);
