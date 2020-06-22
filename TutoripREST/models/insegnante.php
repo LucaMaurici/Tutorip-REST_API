@@ -60,9 +60,16 @@ class Insegnante
 				";
 		$i = 1;
 		foreach($this->materie as &$materia) {
-			$query .= "	INSERT INTO Insegnanti_Materie
+			$query .= "	INSERT INTO Materie
 						SET
-							cod_insegnante=:id, cod_materia=:idMateria".$i.";";
+							nome=:nomeMateria".$i.", prioritàVisualizzazione=1
+						ON DUPLICATE KEY
+						UPDATE
+							prioritàVisualizzazione = prioritàVisualizzazione + 1;
+							
+						INSERT INTO Insegnanti_Materie
+						SET
+							cod_insegnante=:id, cod_materia=(SELECT id FROM Materie WHERE nome=:nomeMateria".$i.");";
 			$i++;
 		}	
                     
@@ -86,7 +93,7 @@ class Insegnante
 		//$this->contatti->facebook = htmlspecialchars(strip_tags($this->contatti->facebook));
 		
 		foreach($this->materie as &$materia)
-			$materia->id = htmlspecialchars(strip_tags($materia->id));
+			$materia->nome = htmlspecialchars(strip_tags($materia->nome));
 		
 		$this->posizione->latitudine = htmlspecialchars(strip_tags($this->posizione->latitudine));
 		$this->posizione->longitudine = htmlspecialchars(strip_tags($this->posizione->longitudine));
@@ -111,8 +118,8 @@ class Insegnante
 		//if($this->contatti->facebook=="") $this->contatti->facebook = null;
 		
 		foreach($this->materie as &$materia)
-			if($materia->id=="")
-				$materia->id = null;
+			if($materia->nome=="")
+				$materia->nome = null;
 		
 		if($this->posizione->latitudine=="") $this->posizione->latitudine = null;
 		if($this->posizione->longitudine=="") $this->posizione->longitudine = null;
@@ -138,7 +145,7 @@ class Insegnante
 		echo " ";
 		$i = 1;
 		foreach($this->materie as &$materia) {
-			echo $stmt->bindParam(":idMateria".$i, $materia->id);
+			echo $stmt->bindParam(":nomeMateria".$i, $materia->nome);
 			$i++;
 		}	
 		echo " ";
