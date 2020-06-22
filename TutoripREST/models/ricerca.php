@@ -30,19 +30,25 @@ class Ricerca
     // READ Insegnanti
 	function read()
 	{
-		echo $this->valutazioneMedia;
-		echo $this->nomeMateria;
+		
 		//$papagno = (3958*3.1415926*sqrt(($lat2-$lat1)*($lat2-$lat1) + cos($lat2/57.29578)*cos($lat1/57.29578)*($lon2-$lon1)*($lon2-$lon1))/180)*1.60934; 
-    	$query = "	
-					SELECT i.Utenti_Credenziali_id, i.descrizione, i.tariffa, i.valutazioneMedia,
+    	
+		$query = "	
+					SELECT i.id, i.tariffa, i.valutazioneMedia,
 							((3958*3.1415926*sqrt((:latitudine- p.latitudine)*(:latitudine-p.latitudine) + cos(:latitudine/57.29578)*cos(p.latitudine/57.29578)*(:longitudine- p.longitudine)*(:longitudine- p.longitudine))/180)*1.60934) as distanza,
 						( 1*(i.valutazioneMedia/5) + (280/(POW(i.tariffa, 1.5)+280)) + ( 8000/(8000+((3958*3.1415926*sqrt((:latitudine- p.latitudine)*(:latitudine-p.latitudine) + cos(:latitudine/57.29578)*cos(p.latitudine/57.29578)*(:longitudine- p.longitudine)*(:longitudine- p.longitudine))/180)*1.60934*1000)) ) ) as rilevanza
                   	FROM
-						(((Insegnanti i JOIN Insegnanti_Materie im ON i.Utenti_Credenziali_id = im.Insegnanti_Utenti_Credenziali_id) 
-						JOIN Materie m ON im.Materie_id = m.id) 
-						JOIN Posizioni p ON i.Posizioni_id = p.id)
+						(((Insegnanti i JOIN Insegnanti_Materie im ON i.id = im.cod_insegnante) 
+						JOIN Materie m ON im.cod_materia = m.id) 
+						JOIN Posizioni p ON i.cod_posizione = p.id)
       				WHERE m.nome = :nomeMateria";
-                   
+			/*	
+		$query = "SELECT i.id, i.tariffa, i.valutazioneMedia 
+					FROM ((Insegnanti i JOIN Insegnanti_Materie im ON i.id = im.cod_insegnante) 
+						JOIN Materie m ON im.cod_materia = m.id) 
+					WHERE m.nome = :nomeMateria";
+                   */
+				   
 		if($this->valutazioneMedia!=null)
         	$query .= " AND "."i.valutazioneMedia >= :valutazioneMedia";
             
@@ -50,13 +56,13 @@ class Ricerca
         	$query .= " AND "."i.tariffa <= :tariffaMassima";
 		
 		if($this->distanzaMassima!=null)
-        	$query .= " AND "."distanza <= :distanzaMassima";
+        	$query .= " HAVING "."distanza <= :distanzaMassima";
         
         $query.= "
         		  ORDER BY rilevanza DESC";
             
         
-        echo $query."\n\n";
+        //echo $query."\n\n";
         //echo $stmt;   
 		$stmt = $this->conn->prepare($query);
         
@@ -82,7 +88,12 @@ class Ricerca
         	$this->distanzaMassima = htmlspecialchars(strip_tags($this->distanzaMassima));
             $stmt->bindParam(":distanzaMassima", $this->distanzaMassima);
         }
-		
+        /*
+        echo $this->valutazioneMedia;
+        echo $this->tariffaMassima;
+		echo $this->nomeMateria;
+        echo $this->distanzaMassima;
+		*/
 		// execute query
 		$stmt->execute();
 		return $stmt;

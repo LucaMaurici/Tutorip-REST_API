@@ -16,7 +16,6 @@ $o = new ricerca($db);
 
 $data = json_decode(file_get_contents("php://input"));
 $o->nomeMateria = $data->nomeMateria;
-echo $o->nomeMateria;
 $o->valutazioneMedia = $data->valutazioneMedia;
 $o->tariffaMassima = $data->tariffaMassima;
 $o->distanzaMassima = $data->distanzaMassima;
@@ -33,10 +32,10 @@ if($num>0){
         extract($row);
 
         $item = array(
-            "email" => $email,
-            "descrizione" => $descrizione,
+            "id" => $id,
             "tariffa" => $tariffa,
-            "valutazioneMedia" => $valutazioneMedia
+            "valutazioneMedia" => $valutazioneMedia,
+            "distanza" => $distanza
         );
 
         array_push($arr['ElencoRisultati'], $item);
