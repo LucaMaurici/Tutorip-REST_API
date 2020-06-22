@@ -11,10 +11,13 @@ class Insegnante
 	public $tariffa;
 	//public $valutazioneMedia;
 	public $numeroValutazioni;
-	public $promozioni;
+	//public $promozioni;
 	public $gruppo;
 	public $dataOraRegistrazione;
 	public $profiloPubblico;
+	public $modalita;
+	public $contatti;
+	public $materie; //= array();
 	public $posizione;
 	
     
@@ -26,7 +29,8 @@ class Insegnante
 	
 	// CREATE con id anzichè id
     function create(){
-        $query ="
+		
+		$query ="
 				INSERT INTO Posizioni
 				SET 
 					latitudine=:latitudine, longitudine=:longitudine, indirizzo=:indirizzo;
@@ -45,6 +49,22 @@ class Insegnante
 					profiloPubblico=:profiloPubblico,
 					cod_posizione=LAST_INSERT_id();
 				";
+        $query .="
+				INSERT INTO Insegnanti_Modalità
+				SET
+					cod_insegnante=:id, cod_modalità=:modalita;
+					
+				INSERT INTO Contatti
+				SET
+					id=:id, cellulare=:cellulare, emailContatto=:emailContatto;
+				";
+		$i = 1;
+		foreach($this->materie as &$materia) {
+			$query .= "	INSERT INTO Insegnanti_Materie
+						SET
+							cod_insegnante=:id, cod_materia=:idMateria".$i.";";
+			$i++;
+		}	
                     
         $stmt = $this->conn->prepare($query);
         
@@ -58,6 +78,15 @@ class Insegnante
 		$this->gruppo = htmlspecialchars(strip_tags($this->gruppo));
 		//$this->dataOraRegistrazione = htmlspecialchars(strip_tags($this->dataOraRegistrazione));
     	$this->profiloPubblico = htmlspecialchars(strip_tags($this->profiloPubblico));
+		
+		$this->modalita = htmlspecialchars(strip_tags($this->modalita));
+		
+		$this->contatti->cellulare = htmlspecialchars(strip_tags($this->contatti->cellulare));
+		$this->contatti->emailContatto = htmlspecialchars(strip_tags($this->contatti->emailContatto));
+		//$this->contatti->facebook = htmlspecialchars(strip_tags($this->contatti->facebook));
+		
+		foreach($this->materie as &$materia)
+			$materia->id = htmlspecialchars(strip_tags($materia->id));
 		
 		$this->posizione->latitudine = htmlspecialchars(strip_tags($this->posizione->latitudine));
 		$this->posizione->longitudine = htmlspecialchars(strip_tags($this->posizione->longitudine));
@@ -75,25 +104,47 @@ class Insegnante
 		//if($this->dataOraRegistrazione=="") $this->dataOraRegistrazione = null;
 		if($this->profiloPubblico=="") $this->profiloPubblico = null;
 		
+		if($this->modalita=="") $this->modalita = null;
+		
+		if($this->contatti->cellulare=="") $this->contatti->cellulare = null;
+		if($this->contatti->emailContatto=="") $this->contatti->emailContatto = null;
+		//if($this->contatti->facebook=="") $this->contatti->facebook = null;
+		
+		foreach($this->materie as &$materia)
+			if($materia->id=="")
+				$materia->id = null;
+		
 		if($this->posizione->latitudine=="") $this->posizione->latitudine = null;
 		if($this->posizione->longitudine=="") $this->posizione->longitudine = null;
 		if($this->posizione->indirizzo=="") $this->posizione->indirizzo = null;
         
         // binding
-        $stmt->bindParam(":id", $this->id);
-        $stmt->bindParam(":nomeDaVisualizzare", $this->nomeDaVisualizzare);
+        echo $stmt->bindParam(":id", $this->id);
+        echo $stmt->bindParam(":nomeDaVisualizzare", $this->nomeDaVisualizzare);
 		#immagine
-		$stmt->bindParam(":tariffa", $this->tariffa);
+		echo $stmt->bindParam(":tariffa", $this->tariffa);
         //$stmt->bindParam(":valutazioneMedia", $this->valutazioneMedia);
-		$stmt->bindParam(":numeroValutazioni", $this->numeroValutazioni);
+		echo $stmt->bindParam(":numeroValutazioni", $this->numeroValutazioni);
 		//$stmt->bindParam(":promozioni", $this->promozioni);
-		$stmt->bindParam(":gruppo", $this->gruppo);
+		echo $stmt->bindParam(":gruppo", $this->gruppo);
         //$stmt->bindParam(":dataOraRegistrazione", $this->dataOraRegistrazione);
-        $stmt->bindParam(":profiloPubblico", $this->profiloPubblico);
+        echo $stmt->bindParam(":profiloPubblico", $this->profiloPubblico);
 		
-		$stmt->bindParam(":latitudine", $this->posizione->latitudine);
-		$stmt->bindParam(":longitudine", $this->posizione->longitudine);
-		$stmt->bindParam(":indirizzo", $this->posizione->indirizzo);
+		echo $stmt->bindParam(":modalita", $this->modalita);
+		
+		echo $stmt->bindParam(":cellulare", $this->contatti->cellulare);
+		echo $stmt->bindParam(":emailContatto", $this->contatti->emailContatto);
+		//$stmt->bindParam(":facebook", $this->$this->contatti->facebook);
+		echo " ";
+		$i = 1;
+		foreach($this->materie as &$materia) {
+			echo $stmt->bindParam(":idMateria".$i, $materia->id);
+			$i++;
+		}	
+		echo " ";
+		echo $stmt->bindParam(":latitudine", $this->posizione->latitudine);
+		echo $stmt->bindParam(":longitudine", $this->posizione->longitudine);
+		echo $stmt->bindParam(":indirizzo", $this->posizione->indirizzo);
 		
 		echo $this->posizione->latitudine . "\n";
 		echo $this->posizione->longitudine. "\n";

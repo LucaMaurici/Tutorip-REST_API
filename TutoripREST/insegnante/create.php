@@ -16,16 +16,20 @@ $data = json_decode(file_get_contents("php://input"));
  
 if(true)
 {
+	echo "DATA: ".$data->id;
     $insegnante->id = $data->id;
 	$insegnante->nomeDaVisualizzare = $data->nomeDaVisualizzare;
 	#immagine
 	$insegnante->tariffa = $data->tariffa;
 	//$insegnante->valutazioneMedia = $data->valutazioneMedia;
-	$insegnante->numeroValutazioni = $data->numeroValutazioni;
-	$insegnante->promozioni = $data->promozioni;
+	$insegnante->numeroValutazioni = $data->numeroValutazioni; // da togliere
+	//$insegnante->promozioni = $data->promozioni;
     $insegnante->gruppo = $data->gruppo;
 	$insegnante->dataOraRegistrazione = $data->dataOraRegistrazione;
 	$insegnante->profiloPubblico = $data->profiloPubblico;
+	$insegnante->modalita = $data->modalita;
+	$insegnante->contatti = $data->contatti;
+	$insegnante->materie = $data->materie;
 	$insegnante->posizione = $data->posizione;
  
    if($insegnante->create()){
@@ -35,12 +39,12 @@ if(true)
     else{
         //503 servizio non disponibile
         http_response_code(503);
-        echo json_encode(array("message" => "Impossibile creare utente."));
+        echo json_encode(array("message" => "Impossibile creare insegnante."));
     }
 }
 else{
     //400 bad request
     http_response_code(400);
-    echo json_encode(array("message" => "Impossibile creare utente, i dati sono incompleti."));
+    echo json_encode(array("message" => "Impossibile creare insegnante, i dati sono incompleti."));
 }
 ?>
