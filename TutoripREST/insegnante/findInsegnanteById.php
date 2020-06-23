@@ -33,13 +33,14 @@ if($num>0){
 		$contatti = array(
 			"cellulare" => $cellulare,
 			"emailContatto" => $emailContatto,
-			"facebook" => $facebook
+			//"facebook" => $facebook
 		);
 		
+		/*
 		$modalità = array(
 			"id" => $idModalità,
 			"nome" => $nomeModalità
-		);
+		);*/
 
         $item = array(
             "id" => $id,
@@ -53,7 +54,7 @@ if($num>0){
             "profiloPubblico" => $profiloPubblico,
 			"posizione" => $posizione,
 			"contatti" => $contatti,
-			"modalita" => $modalità
+			"modalita" => $idModalità
         );
     }
 
