@@ -1,4 +1,6 @@
 <?php
+include_once "../Service/parameters.php";
+
 class Insegnante
 {
 	private $conn;
@@ -184,7 +186,7 @@ class Insegnante
                     
         $stmt = $this->conn->prepare($query);
         
-        $this->id = htmlspecialchars(strip_tags($this->id));
+        //$this->id = htmlspecialchars(strip_tags($this->id));
 		/*
 		$this->nomeDaVisualizzare = htmlspecialchars(strip_tags($this->nomeDaVisualizzare));
 		#immagine
@@ -201,7 +203,7 @@ class Insegnante
 		$this->posizione->indirizzo = htmlspecialchars(strip_tags($this->posizione->indirizzo));
 		*/
 		
-		if($this->id=="") $this->id = null;
+		//if($this->id=="") $this->id = null;
 		/*
 		if($this->nomeDaVisualizzare=="") $this->nomeDaVisualizzare = null;
 		#immagine
@@ -218,7 +220,8 @@ class Insegnante
 		if($this->posizione->indirizzo=="") $this->posizione->indirizzo = null;
         */
         // binding
-        $stmt->bindParam(":id", $this->id);
+        //$stmt->bindParam(":id", $this->id);
+		$stmt->bindParam(":id", prepareParam($this->id));
 		/*
         $stmt->bindParam(":nomeDaVisualizzare", $this->nomeDaVisualizzare);
 		#immagine
