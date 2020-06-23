@@ -177,11 +177,16 @@ class Insegnante
 	// findByid
     function findByid(){
         $query = "	
-					SELECT i.id, i.nomeDaVisualizzare, i.tariffa, i.valutazioneMedia, i.numeroValutazioni, i.gruppo, i.profiloPubblico, p.latitudine, p.longitudine, p.indirizzo
+					SELECT 	i.id, i.nomeDaVisualizzare, i.tariffa, i.valutazioneMedia, i.numeroValutazioni, i.gruppo, i.profiloPubblico,
+							p.latitudine, p.longitudine, p.indirizzo,
+							c.cellulare, c.emailContatto, c.facebook,
+							mo.id as idModalità, mo.nome as nomeModalità
                   	FROM
-						(((Insegnanti i LEFT JOIN Insegnanti_Materie im ON i.id = im.cod_insegnante) 
-						LEFT JOIN Materie m ON im.cod_materia = m.id) 
+						((((Insegnanti i 
 						LEFT JOIN Posizioni p ON i.cod_posizione = p.id)
+						LEFT JOIN Contatti c ON c.id = i.id)
+						LEFT JOIN Insegnanti_Modalità iMod ON iMod.cod_insegnante = i.id)
+						LEFT JOIN Modalità mo ON iMod.cod_modalità = mo.id)
       				WHERE i.id = :id";
                     
         $stmt = $this->conn->prepare($query);
@@ -237,6 +242,8 @@ class Insegnante
 		$stmt->bindParam(":longitudine", $this->posizione->longitudine);
 		$stmt->bindParam(":indirizzo", $this->posizione->indirizzo);
 		*/
+		
+		$stmt->bindParam(":id", prepareParam($this->id));
 		
 		/*
 		echo $this->posizione->latitudine . "\n";

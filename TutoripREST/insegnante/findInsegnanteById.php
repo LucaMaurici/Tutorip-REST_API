@@ -29,6 +29,17 @@ if($num>0){
 			"longitudine" => $longitudine,
 			"indirizzo" => $indirizzo
 		);
+		
+		$contatti = array(
+			"cellulare" => $cellulare,
+			"emailContatto" => $emailContatto,
+			"facebook" => $facebook
+		);
+		
+		$modalità = array(
+			"id" => $idModalità,
+			"nome" => $nomeModalità
+		);
 
         $item = array(
             "id" => $id,
@@ -40,8 +51,9 @@ if($num>0){
 			//"promozioni" => $promozioni,
             "gruppo" => $gruppo,
             "profiloPubblico" => $profiloPubblico,
-			"posizione" => $posizione
-			
+			"posizione" => $posizione,
+			"contatti" => $contatti,
+			"modalita" => $modalità
         );
     }
 
