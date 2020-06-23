@@ -27,12 +27,12 @@ if($num>0){
 	$arr = array();
 	$arr['ElencoRisultati'] = array();
 
-
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
         extract($row);
 
         $item = array(
             "id" => $id,
+			"nomeDaVisualizzare" => $nomeDaVisualizzare,
             "tariffa" => $tariffa,
             "valutazioneMedia" => $valutazioneMedia,
             "distanza" => $distanza

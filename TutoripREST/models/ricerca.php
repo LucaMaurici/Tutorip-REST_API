@@ -34,7 +34,7 @@ class Ricerca
 		//$papagno = (3958*3.1415926*sqrt(($lat2-$lat1)*($lat2-$lat1) + cos($lat2/57.29578)*cos($lat1/57.29578)*($lon2-$lon1)*($lon2-$lon1))/180)*1.60934; 
     	
 		$query = "	
-					SELECT i.id, i.tariffa, i.valutazioneMedia,
+					SELECT i.id, i.nomeDaVisualizzare, i.tariffa, i.valutazioneMedia,
 							((3958*3.1415926*sqrt((:latitudine- p.latitudine)*(:latitudine-p.latitudine) + cos(:latitudine/57.29578)*cos(p.latitudine/57.29578)*(:longitudine- p.longitudine)*(:longitudine- p.longitudine))/180)*1.60934) as distanza,
 						( 1*(i.valutazioneMedia/5) + (280/(POW(i.tariffa, 1.5)+280)) + ( 8000/(8000+((3958*3.1415926*sqrt((:latitudine- p.latitudine)*(:latitudine-p.latitudine) + cos(:latitudine/57.29578)*cos(p.latitudine/57.29578)*(:longitudine- p.longitudine)*(:longitudine- p.longitudine))/180)*1.60934*1000)) ) ) as rilevanza
                   	FROM
