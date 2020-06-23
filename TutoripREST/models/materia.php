@@ -33,6 +33,18 @@ class Materia
 		$stmt->execute();
 		return $stmt;
     }
+    
+    //findAllMaterie
+	function findAllMaterie() {
+	$query = "select nome 
+		  from Materie
+		  order by prioritàVisualizzazione DESC";
+
+	 $stmt = $this->conn->prepare($query);
+
+	 $stmt->execute();
+	 return $stmt;
+	}
 	
 }
 ?>
