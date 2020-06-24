@@ -25,5 +25,27 @@ class Preferiti {
 	return $stmt;
 	}
     
+    
+    function savePreferito() {
+	$query = "INSERT INTO Preferiti 
+			  SET cod_utente=:id_utente, cod_insegnante=:id_insegnante, dataOraCreazione=now()";
+			  
+	$stmt = $this->conn->prepare($query);
+	$this->cod_utente = htmlspecialchars(strip_tags($this->cod_utente));
+	$this->cod_insegnante = htmlspecialchars(strip_tags($this->cod_insegnante));
+	//ci va anche la data?
+	
+	//binding
+	$stmt->bindParam(":id_utente", $this->cod_utente);
+    $stmt->bindParam(":id_insegnante", $this->cod_insegnante);
+	//ci va anche la data?
+	
+	// execute query
+    if($stmt->execute()){
+		return true;
+    }
+    return false;
+	}
+    
 } 
 ?>
