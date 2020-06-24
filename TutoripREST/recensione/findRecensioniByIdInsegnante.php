@@ -7,37 +7,51 @@ header("Access-Control-Max-Age: 3600");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 
 include_once '../config/database.php';
-include_once '../models/credenziali.php';
+include_once '../models/recensione.php';
 
 $database = new Database();
 $db = $database->getConnection();
 
-$credenziali = new credenziali($db);
+$o = new recensione($db);
+
 $data = json_decode(file_get_contents("php://input"));
-$credenziali->Email = $data->Email;
-$stmt = $credenziali->checkEmail();
+$o->id = $data->id;
+$stmt = $o->findByIdInsegnante();
 $num = $stmt->rowCount();
 
 if($num>0){
-	//$utenti_arr = array();
-	//$utenti_arr['Elenco'] = array();
+	$arr = array();
+	$arr['ElencoRecensioni'] = array();
+
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
         extract($row);
-        $numero_item = array(
-            "n" => $n,
+
+        $item = array(
+            "titolo" => $titolo,
+			"corpo" => $corpo,
+			"valutazioneGenerale" => $valutazioneGenerale,
+			"spiegazione" => $spiegazione,
+			"empatia" =>$empatia,
+			"organizzazione" => $organizzazione,
+			"anonimo" => $anonimo,
+			"dataOra" => $dataOra,
+			"utente" => array(
+								"nome" => $nome,
+								"cognome" => $cognome
+						)
         );
-        //array_push($utenti_arr['Elenco'], $utente_item);
+
+        array_push($arr['ElencoRecensioni'], $item);
     }
 
     http_response_code(200);
-    echo json_encode($numero_item);
-}
-else{
+    echo json_encode($arr);
+}else{
 
     http_response_code(404);
 
     echo json_encode(
-        array("message" => "Errore nell'esecuzione della query.")
+        array("message" => "Nessuna recensione trovata.")
     );
 }
 ?>
