@@ -9,6 +9,7 @@ class Recensione
     public $cod_utente;
 	public $cod_insegnante;
 	public $titolo;
+	public $corpo;
 	public $valutazioneGenerale;
 	public $spiegazione;
 	public $empatia;
@@ -24,11 +25,11 @@ class Recensione
 	// findByid
     function findByIdInsegnante(){
 		
-        $query = "	SELECT r.titolo, r.corpo, r.valutazioneGenerale, r.spiegazione, r.empatia, r.organizzazione, r.anonimo, r.dataOra, u.nome, u.congnome
+        $query = "	SELECT r.titolo, r.corpo, r.valutazioneGenerale, r.spiegazione, r.empatia, r.organizzazione, r.anonimo, r.dataOra, u.nome, u.cognome
                   	FROM
 						(Insegnanti i JOIN Recensioni r ON r.cod_insegnante = i.id)
-						JOIN Utente u ON i.id = u.id
-      				WHERE ir.cod_insegnante = :id
+						JOIN Utenti u ON i.id = u.id
+      				WHERE r.cod_insegnante = :id
 					ORDER BY r.dataOra DESC";
                     
         $stmt = $this->conn->prepare($query);
@@ -47,7 +48,7 @@ class Recensione
 		
         $query = "	INSERT INTO Recensioni
 					SET
-						cod_utente=:cod_utente, cod_insegnante=:cod_insegnante, r.titolo=:titolo, corpo=:corpo, valutazioneGenerale=:valutazioneGenerale, 
+						cod_utente=:cod_utente, cod_insegnante=:cod_insegnante, titolo=:titolo, corpo=:corpo, valutazioneGenerale=:valutazioneGenerale, 
 						spiegazione=:spiegazione, empatia=:empatia, organizzazione=:organizzazione, anonimo=:anonimo, dataOra=NOW()";
                     
         $stmt = $this->conn->prepare($query);

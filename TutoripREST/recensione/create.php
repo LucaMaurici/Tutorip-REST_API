@@ -11,7 +11,7 @@ include_once '../models/recensione.php';
 
 $database = new Database();
 $db = $database->getConnection();
-$recensione = new recensione($db);
+$o = new recensione($db);
 $data = json_decode(file_get_contents("php://input"));
  
 if(
@@ -20,6 +20,8 @@ if(
 	$o->cod_utente = $data->cod_utente;
     $o->cod_insegnante = $data->cod_insegnante;
 	$o->titolo = $data->titolo;
+	$o->corpo = $data->corpo;
+	$o->valutazioneGenerale = $data->valutazioneGenerale;
     $o->spiegazione = $data->spiegazione;
 	$o->empatia = $data->empatia;
 	$o->organizzazione = $data->organizzazione;
