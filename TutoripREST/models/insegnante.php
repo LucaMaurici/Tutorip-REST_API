@@ -265,18 +265,6 @@ class Insegnante
 		$stmt->execute();
 		return $stmt;
     }
-    
-    function findPreferitiById() {
-	$query = "Select i.id, i.nomeDaVisualizzare, i.valutazioneMedia, i.tariffa
-			  from ((Insegnanti i join Preferiti p) on (p.cod_insegnante = i.id)) 
-			  where ((p.cod_utente =: id)
-			  order by p.dataOraCreazione"
-			  
-	$stmt = $this->conn->prepare($query);
-	$stmt->bindParam(":id", prepareParam($this->id));
-	$stmt->execute();
-	return $stmt;
-	}
 	
 }
 ?>
