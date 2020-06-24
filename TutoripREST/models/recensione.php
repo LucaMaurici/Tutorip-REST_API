@@ -29,7 +29,7 @@ class Recensione
                   	FROM
 						(Insegnanti i JOIN Recensioni r ON r.cod_insegnante = i.id)
 						JOIN Utenti u ON i.id = u.id
-      				WHERE r.cod_insegnante = :id
+      				WHERE r.cod_insegnante = :id AND NOT ((r.titolo IS NULL OR r.titolo = '') AND (r.corpo IS NULL OR r.corpo = ''))
 					ORDER BY r.dataOra DESC";
                     
         $stmt = $this->conn->prepare($query);
