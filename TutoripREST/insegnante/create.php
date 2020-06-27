@@ -16,7 +16,7 @@ $data = json_decode(file_get_contents("php://input"));
  
 if(true)
 {
-	echo "DATA: ".$data->id;
+	//echo "DATA: ".$data->id;
     $insegnante->id = $data->id;
 	$insegnante->nomeDaVisualizzare = $data->nomeDaVisualizzare;
 	#immagine
