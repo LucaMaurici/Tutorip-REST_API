@@ -14,10 +14,11 @@ $db = $database->getConnection();
 $preferiti = new preferiti($db);
 $data = json_decode(file_get_contents("php://input"));
 
-$preferiti->cod_utente = $data->id_utente;
-$preferiti->cod_insegnante = $data->id_insegnante;
+if(true) {
+	$preferiti->cod_utente = $data->cod_utente;
+	$preferiti->cod_insegnante = $data->cod_insegnante;
 
-if($preferiti->savePreferiti()){
+	if($preferiti->savePreferiti()){
         http_response_code(201);
         echo json_encode(array("message" => "preferiti creato correttamente."));
 	}

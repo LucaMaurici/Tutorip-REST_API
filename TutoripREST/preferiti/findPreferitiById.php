@@ -9,24 +9,33 @@ header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers
 include_once '../config/database.php';
 include_once '../models/preferiti.php';  
 
+$database = new Database();
+$db = $database->getConnection();
+
 $o = new preferiti($db);
 $data = json_decode(file_get_contents("php://input"));
-$o->cod_utente = $data->id;
+$o->cod_utente = $data->idUtente;
 $stmt = $o->findPreferitiById();
 $num = $stmt->rowCount();
 
 if($num>0){
+	$arr = array();
+    $arr['ElencoRisultati'] = array();
+    
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
         extract($row);
-	    $item = array(
+	    
+        $item = array(
              "id" => $id,
 			 "nomeDaVisualizzare" => $nomeDaVisualizzare,
 			 "tariffa" => $tariffa,
 			 "valutazioneMedia" => $valutazioneMedia,
 		);
+        array_push($arr['ElencoRisultati'], $item);
 	}
+    
 	http_response_code(200);
-    echo json_encode($item);
+    echo json_encode($arr);
 }else{
 	http_response_code(404);
 	echo json_encode(

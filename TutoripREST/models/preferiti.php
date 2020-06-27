@@ -4,9 +4,9 @@ include_once "../Service/parameters.php";
 class Preferiti {
 	private $conn;
     
-	public cod_utente;
-	public cod_insegnante;
-	public dataOraCreazione;
+	public $cod_utente;
+	public $cod_insegnante;
+	//public dataOraCreazione;
     
     public function __construct($db)
 	{
@@ -14,19 +14,22 @@ class Preferiti {
 	}
     
     function findPreferitiById() {
-	$query = "Select i.nomeDaVisualizzare, i.valutazioneMedia, i.tariffa
-			  from ((Insegnanti i join Preferiti p) on (p.cod_insegnante = i.id)) 
-			  where ((p.cod_utente =: id)
-			  order by p.dataOraCreazione";
+	$query = "SELECT i.id, i.nomeDaVisualizzare, i.valutazioneMedia, i.tariffa
+			  FROM (Insegnanti i JOIN Preferiti p ON p.cod_insegnante = i.id) 
+			  WHERE p.cod_utente = :idUtente
+			  ORDER BY p.dataOraCreazione";
 			  
 	$stmt = $this->conn->prepare($query);
-	$stmt->bindParam(":id", prepareParam($this->cod_utente));
+    $this->cod_utente = htmlspecialchars(strip_tags($this->cod_utente));
+	$this->cod_insegnante = htmlspecialchars(strip_tags($this->cod_insegnante));
+    //BINDING
+	$stmt->bindParam(":idUtente", prepareParam($this->cod_utente));
 	$stmt->execute();
 	return $stmt;
 	}
     
     
-    function savePreferito() {
+    function savePreferiti() {
 	$query = "INSERT INTO Preferiti 
 			  SET cod_utente=:id_utente, cod_insegnante=:id_insegnante, dataOraCreazione=now()";
 			  
