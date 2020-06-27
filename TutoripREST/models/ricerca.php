@@ -50,7 +50,7 @@ class Ricerca
                    */
 				   
 		if($this->valutazioneMedia!=null)
-        	$query .= " AND "."i.valutazioneMedia >= :valutazioneMedia";
+        	$query .= " AND "."i.valutazioneMedia >= :valutazioneMinima";
             
         if($this->tariffaMassima!=null)
         	$query .= " AND "."i.tariffa <= :tariffaMassima";
@@ -69,9 +69,9 @@ class Ricerca
         // binding
         $this->nomeMateria = htmlspecialchars(strip_tags($this->nomeMateria));
         $stmt->bindParam(":nomeMateria", $this->nomeMateria);
-        if($this->valutazioneMedia!=null) {
-        	$this->valutazioneMedia = htmlspecialchars(strip_tags($this->valutazioneMedia));
-            $stmt->bindParam(":valutazioneMedia", $this->valutazioneMedia);
+        if($this->valutazioneMinima!=null) {
+        	$this->valutazioneMinima = htmlspecialchars(strip_tags($this->valutazioneMinima));
+            $stmt->bindParam(":valutazioneMinima", $this->valutazioneMinima);
         }
         if($this->tariffaMassima!=null) {
         	$this->tariffaMassima = htmlspecialchars(strip_tags($this->tariffaMassima));
@@ -89,7 +89,7 @@ class Ricerca
             $stmt->bindParam(":distanzaMassima", $this->distanzaMassima);
         }
         /*
-        echo $this->valutazioneMedia;
+        echo $this->valutazioneMinima;
         echo $this->tariffaMassima;
 		echo $this->nomeMateria;
         echo $this->distanzaMassima;

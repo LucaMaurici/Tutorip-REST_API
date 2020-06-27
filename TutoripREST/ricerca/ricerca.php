@@ -16,7 +16,7 @@ $o = new ricerca($db);
 
 $data = json_decode(file_get_contents("php://input"));
 $o->nomeMateria = $data->nomeMateria;
-$o->valutazioneMedia = $data->valutazioneMedia;
+$o->valutazioneMinima = $data->valutazioneMinima;
 $o->tariffaMassima = $data->tariffaMassima;
 $o->distanzaMassima = $data->distanzaMassima;
 $o->posizione = $data->posizione;
