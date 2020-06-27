@@ -194,7 +194,7 @@ class Insegnante
     }
 	
 	// findByid
-    function findByid(){
+    function findById(){
         $query = "	
 					SELECT 	i.id, i.nomeDaVisualizzare, i.tariffa, i.valutazioneMedia, i.numeroValutazioni, i.gruppo, i.profiloPubblico,
 							p.id as idPosizione, p.latitudine, p.longitudine, p.indirizzo,

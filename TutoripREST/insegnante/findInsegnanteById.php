@@ -8,6 +8,9 @@ header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers
 
 include_once '../config/database.php';
 include_once '../models/insegnante.php';
+include_once '../models/materia.php';
+include_once '../models/recensione.php';
+include_once '../models/sezioneProfilo.php';
 
 $database = new Database();
 $db = $database->getConnection();
@@ -21,6 +24,7 @@ $stmt = $o->findByid();
 $num = $stmt->rowCount();
 
 if($num>0){
+	$array = array();
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
         extract($row);
 		
@@ -43,7 +47,7 @@ if($num>0){
 			"nome" => $nomeModalità
 		);*/
 
-        $item = array(
+        $array = array(
             "id" => $id,
 			"nomeDaVisualizzare" => $nomeDaVisualizzare,
 			//"descrizione" => $descrizione,
@@ -60,7 +64,70 @@ if($num>0){
     }
 
     http_response_code(200);
-    echo json_encode($item);
+	
+	$o = new materia($db);
+	$o->id = $data->id;
+	$stmt = $o->findByIdInsegnante();
+	$num = $stmt->rowCount();
+	if($num>0){
+		$array["Materie"] = array();
+		while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+			extract($row);
+			
+			$item = array(
+				"nome" => $nome
+			);
+			array_push($array["Materie"], $item);
+		}
+	}
+	
+	$o = new recensione($db);
+	$o->id = $data->id;
+	$stmt = $o->findByIdInsegnante();
+	$num = $stmt->rowCount();
+	if($num>0){
+		$array["Recensioni"] = array();
+		while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+			extract($row);
+			
+			$item = array(
+				"titolo" => $titolo,
+				"corpo" => $corpo,
+				"valutazioneGenerale" => $valutazioneGenerale,
+				"spiegazione" => $spiegazione,
+				"empatia" =>$empatia,
+				"organizzazione" => $organizzazione,
+				"anonimo" => $anonimo,
+				"dataOra" => $dataOra,
+				"utente" => array(
+									"nome" => $nome,
+									"cognome" => $cognome
+							)
+        );
+			array_push($array["Recensioni"], $item);
+		}
+	}
+	
+	$o = new sezioneProfilo($db);
+	$o->id = $data->id;
+	$stmt = $o->findByIdInsegnante();
+	$num = $stmt->rowCount();
+	if($num>0){
+		$array["Descrizione"] = array();
+		while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+			extract($row);
+			
+			$item = array(
+				"id" => $id,
+				"indice" => $indice,
+				"titolo" => $titolo,
+				"corpo" => $corpo,
+        );
+			array_push($array["Descrizione"], $item);
+		}
+	}
+	
+    echo json_encode($array);
 }else{
 
     http_response_code(404);
