@@ -25,6 +25,7 @@ if($num>0){
         extract($row);
 		
 		$posizione = array(
+			"id" => $idPosizione,
 			"latitudine" => $latitudine,
 			"longitudine" => $longitudine,
 			"indirizzo" => $indirizzo

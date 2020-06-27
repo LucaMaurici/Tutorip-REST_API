@@ -33,12 +33,10 @@ class Insegnante
     function create(){
 		
 		$query ="
-				INSERT IGNORE INTO Posizioni
+				INSERT INTO Posizioni
 				SET
-					id=:idPosizione, latitudine=:latitudine, longitudine=:longitudine, indirizzo=:indirizzo;
-					
-				SELECT LAST_INSERT_ID();
-				
+					latitudine=:latitudine, longitudine=:longitudine, indirizzo=:indirizzo;
+
 				INSERT INTO Insegnanti
                 SET
                     id=:id,
@@ -52,8 +50,9 @@ class Insegnante
 					cod_posizione=LAST_INSERT_ID()
 				ON DUPLICATE KEY
 					UPDATE
-						nomeDaVisualizzare=:nomeDaVisualizzare, tariffa=:tariffa, gruppo=:gruppo, profiloPubblico=:profiloPubblico;
-					
+						nomeDaVisualizzare=:nomeDaVisualizzare, tariffa=:tariffa, gruppo=:gruppo, profiloPubblico=:profiloPubblico, cod_posizione=LAST_INSERT_ID();
+				
+				DELETE FROM Posizioni WHERE id=:idPosizione;
 				";
         $query .="
 				INSERT INTO Insegnanti_Modalità
@@ -84,10 +83,15 @@ class Insegnante
 							cod_insegnante=:id, cod_materia=(SELECT id FROM Materie WHERE nome=:nomeMateria".$i.")
 						ON DUPLICATE KEY
 							UPDATE
-								cod_insegnante=:id, cod_materia=(SELECT id FROM Materie WHERE nome=:nomeMateria".$i.")";
+								cod_insegnante=:id, cod_materia=(SELECT id FROM Materie WHERE nome=:nomeMateria".$i.");
+								";
 			$i++;
-		}	
-                    
+		}
+		
+		//$query .="SELECT LAST_INSERT_ID() as idPosizione";
+		//$query .="SELECT 'ciao' as idPosizione";
+		//echo "fkapodmkaslkmniop";
+        //echo $query;
         $stmt = $this->conn->prepare($query);
         
         $this->id = htmlspecialchars(strip_tags($this->id));
@@ -141,7 +145,7 @@ class Insegnante
 		if($this->posizione->latitudine=="") $this->posizione->latitudine = null;
 		if($this->posizione->longitudine=="") $this->posizione->longitudine = null;
 		if($this->posizione->indirizzo=="") $this->posizione->indirizzo = null;
-        echo "IDPOSIZIONE: ".$this->posizione->id;
+        
         // binding
         $stmt->bindParam(":id", $this->id);
         $stmt->bindParam(":nomeDaVisualizzare", $this->nomeDaVisualizzare);
@@ -185,17 +189,15 @@ class Insegnante
 		echo $query. "\n";
         */
         // execute query
-        if($stmt->execute()){
-			return true;
-        }
-        return false;
+        $stmt->execute();
+		return $stmt;
     }
 	
 	// findByid
     function findByid(){
         $query = "	
 					SELECT 	i.id, i.nomeDaVisualizzare, i.tariffa, i.valutazioneMedia, i.numeroValutazioni, i.gruppo, i.profiloPubblico,
-							p.latitudine, p.longitudine, p.indirizzo,
+							p.id as idPosizione, p.latitudine, p.longitudine, p.indirizzo,
 							c.cellulare, c.emailContatto, c.facebook,
 							mo.id as idModalità, mo.nome as nomeModalità
                   	FROM
