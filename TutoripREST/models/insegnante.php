@@ -20,6 +20,7 @@ class Insegnante
 	public $modalita;
 	public $contatti;
 	public $materie; //= array();
+	public $descrizione;
 	public $posizione;
 	
     
@@ -84,6 +85,17 @@ class Insegnante
 						ON DUPLICATE KEY
 							UPDATE
 								cod_insegnante=:id, cod_materia=(SELECT id FROM Materie WHERE nome=:nomeMateria".$i.");
+								";
+			$i++;
+		}
+		$i = 1;
+		foreach($this->descrizione as &$sezione) {
+			$query .= "	INSERT INTO SezioniProfilo
+						SET
+							indice=:indice".$i.", titolo=:titolo".$i.", corpo=:corpo".$i.", cod_insegnante=:id
+						ON DUPLICATE KEY
+							UPDATE
+								indice=:indice".$i.", titolo=:titolo".$i.", corpo=:corpo".$i.", cod_insegnante=:id;
 								";
 			$i++;
 		}
@@ -175,6 +187,19 @@ class Insegnante
 		$stmt->bindParam(":longitudine", $this->posizione->longitudine);
 		$stmt->bindParam(":indirizzo", $this->posizione->indirizzo);
 		
+		//FATTO COL NUOVO METODO
+		$i = 1;
+		foreach($this->descrizione as &$sezione) {
+			$stmt->bindParam(":indice".$i, prepareParam($sezione->indice));
+			$stmt->bindParam(":titolo".$i, prepareParam($sezione->titolo));
+			$stmt->bindParam(":corpo".$i, prepareParam($sezione->corpo));
+			$i++;
+			echo prepareParam($sezione->indice);
+			echo prepareParam($sezione->titolo);
+			echo prepareParam($sezione->corpo);
+		}
+		
+		
 		/*
 		echo $this->posizione->latitudine . "\n";
 		echo $this->posizione->longitudine. "\n";
@@ -186,8 +211,9 @@ class Insegnante
 		echo $this->valutazione. "\n";
 		echo $this->descrizione. "\n";
 		echo $this->gruppo. "\n";
+		*/
 		echo $query. "\n";
-        */
+        
         // execute query
         $stmt->execute();
 		return $stmt;

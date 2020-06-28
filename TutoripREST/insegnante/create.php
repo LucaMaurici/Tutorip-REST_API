@@ -30,28 +30,17 @@ $insegnante->profiloPubblico = $data->profiloPubblico;
 $insegnante->modalita = $data->modalita;
 $insegnante->contatti = $data->contatti;
 $insegnante->materie = $data->materie;
+$insegnante->descrizione = $data->Descrizione;
 $insegnante->posizione = $data->posizione;
 
-$stmt = $insegnante->create();
-$num = $stmt->rowCount();
-
-if($num>0){
-	//echo $num;
-    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
-		//echo "dentro";
-        extract($row);
-        $item = array(
-            "idPosizione" => $idPosizione
-        );
-		//break;
-    }
-
-    http_response_code(200);
-    echo json_encode($item);
+if($insegnante->create()){
+	http_response_code(201);
+	echo json_encode(array("message" => "utente creato correttamente."));
 }
 else{
-    //400 bad request
-    http_response_code(400);
-    echo json_encode(array("message" => "Impossibile creare insegnante, i dati sono incompleti."));
+	//503 servizio non disponibile
+	http_response_code(503);
+	echo json_encode(array("message" => "Impossibile creare insegnante."));
 }
+
 ?>
