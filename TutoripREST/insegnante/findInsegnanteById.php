@@ -38,7 +38,7 @@ if($num>0){
 		$contatti = array(
 			"cellulare" => $cellulare,
 			"emailContatto" => $emailContatto,
-			//"facebook" => $facebook
+			"facebook" => $facebook
 		);
 		
 		/*
