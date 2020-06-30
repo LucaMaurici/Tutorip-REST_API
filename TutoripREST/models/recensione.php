@@ -28,7 +28,7 @@ class Recensione
         $query = "	SELECT r.titolo, r.corpo, r.valutazioneGenerale, r.spiegazione, r.empatia, r.organizzazione, r.anonimo, r.dataOra, u.nome, u.cognome
                   	FROM
 						(Insegnanti i JOIN Recensioni r ON r.cod_insegnante = i.id)
-						JOIN Utenti u ON i.id = u.id
+						JOIN Utenti u ON r.cod_utente = u.id
       				WHERE r.cod_insegnante = :id AND NOT ((r.titolo IS NULL OR r.titolo = '') AND (r.corpo IS NULL OR r.corpo = ''))
 					ORDER BY r.dataOra DESC";
                     
@@ -49,8 +49,16 @@ class Recensione
         $query = "	INSERT INTO Recensioni
 					SET
 						cod_utente=:cod_utente, cod_insegnante=:cod_insegnante, titolo=:titolo, corpo=:corpo, valutazioneGenerale=:valutazioneGenerale, 
-						spiegazione=:spiegazione, empatia=:empatia, organizzazione=:organizzazione, anonimo=:anonimo, dataOra=NOW()";
-                    
+						spiegazione=:spiegazione, empatia=:empatia, organizzazione=:organizzazione, anonimo=:anonimo, dataOra=NOW();";
+				
+		if(prepareParam($this->valutazioneGenerale) != 0){
+			$query.= "
+						UPDATE Insegnanti
+						SET valutazioneMedia=((valutazioneMedia*numeroValutazioni)+(:valutazioneGenerale))/(numeroValutazioni+1), numeroValutazioni=numeroValutazioni+1
+						WHERE id=:cod_insegnante;";
+		}
+
+          
         $stmt = $this->conn->prepare($query);
         
 		$stmt->bindParam(":cod_utente", prepareParam($this->cod_utente));
@@ -64,7 +72,9 @@ class Recensione
 		$stmt->bindParam(":anonimo", prepareParam($this->anonimo));
 		
 		//echo prepareParam($this->id);
-		
+		echo $query;
+		echo prepareParam($this->cod_insegnante);
+		echo prepareParam($this->valutazioneGenerale);
         // execute query
 		$stmt->execute();
 		return $stmt;

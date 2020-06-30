@@ -95,7 +95,9 @@ class Insegnante
 							indice=:indice".$i.", titolo=:titolo".$i.", corpo=:corpo".$i.", cod_insegnante=:id
 						ON DUPLICATE KEY
 							UPDATE
-								indice=:indice".$i.", titolo=:titolo".$i.", corpo=:corpo".$i.", cod_insegnante=:id;
+								titolo=:titolo".$i.", corpo=:corpo".$i."
+							WHERE
+								indice=:indice".$i.", cod_insegnante=:id;
 								";
 			$i++;
 		}
@@ -190,6 +192,7 @@ class Insegnante
 		//FATTO COL NUOVO METODO
 		$i = 1;
 		foreach($this->descrizione as &$sezione) {
+			//$stmt->bindParam(":idSezioneProfilo".$i, prepareParam($sezione->id));
 			$stmt->bindParam(":indice".$i, prepareParam($sezione->indice));
 			$stmt->bindParam(":titolo".$i, prepareParam($sezione->titolo));
 			$stmt->bindParam(":corpo".$i, prepareParam($sezione->corpo));
@@ -288,7 +291,7 @@ class Insegnante
 		$stmt->bindParam(":indirizzo", $this->posizione->indirizzo);
 		*/
 		
-		$stmt->bindParam(":id", prepareParam($this->id));
+		//$stmt->bindParam(":id", prepareParam($this->id));
 		
 		/*
 		echo $this->posizione->latitudine . "\n";
