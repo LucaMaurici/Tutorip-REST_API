@@ -95,10 +95,7 @@ class Insegnante
 							indice=:indice".$i.", titolo=:titolo".$i.", corpo=:corpo".$i.", cod_insegnante=:id
 						ON DUPLICATE KEY
 							UPDATE
-								titolo=:titolo".$i.", corpo=:corpo".$i."
-							WHERE
-								indice=:indice".$i.", cod_insegnante=:id;
-								";
+								titolo=:titolo".$i.", corpo=:corpo".$i.", indice=:indice".$i.", cod_insegnante=:id;";
 			$i++;
 		}
 		
